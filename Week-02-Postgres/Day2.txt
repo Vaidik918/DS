@@ -1,0 +1,20 @@
+
+
+WITH CategoryRanking AS (
+    SELECT
+        Category,
+        Product,
+        Revenue,
+        DENSE_RANK() OVER (PARTITION BY Category ORDER BY Revenue DESC) AS rank_val
+    FROM
+        SalesData
+)
+SELECT
+    Category,
+    Product,
+    Revenue,
+    rank_val
+FROM
+    CategoryRanking
+WHERE
+    rank_val <= 3; 
