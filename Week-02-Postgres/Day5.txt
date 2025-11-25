@@ -1,0 +1,25 @@
+
+WITH RankedSales AS (
+    -- Step 1: Logic Engine (Calculate Ranks)
+    SELECT 
+        Region,
+        Category,
+        Product,
+        Revenue,
+        -- Har Region mein Revenue ke hisaab se rank (Ties allowed)
+        DENSE_RANK() OVER (PARTITION BY Region ORDER BY Revenue DESC) AS rank_val
+    FROM 
+        SalesData
+)
+-- Step 2: Filter Engine (Show only Winners)
+SELECT 
+    Region,
+    Product,
+    Revenue,
+    rank_val
+FROM 
+    RankedSales
+WHERE 
+    rank_val <= 2
+ORDER BY 
+    Region, rank_val;
